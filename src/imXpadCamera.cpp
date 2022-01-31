@@ -294,6 +294,9 @@ void Camera::stopAcq()
 	DEB_MEMBER_FUNCT();
 	DEB_TRACE() << "********** Inside of Camera::stopAcq ***********";
 
+	m_wait_flag = false;
+	m_cond.broadcast();
+
 	//waitAcqEnd();
 
 	DEB_TRACE() << "********** Outside of Camera::stopAcq ***********";

@@ -76,19 +76,20 @@ private:
 // @brief  Ctor
 //---------------------------m_npixels
 
-Camera::Camera(string hostname, int port, unsigned int moduleMask) : m_host_name(hostname), m_port(port)
+Camera::Camera(string hostname, int port, unsigned int moduleMask)
+: m_host_name(hostname)
+, m_port(port)
+, m_module_mask(moduleMask)
 {
 	DEB_CONSTRUCTOR();
-
-	//use module mask to enable/disable some modules. 
-	//Do not apply if 0, in order to keep compatibility with others versions
-	if(moduleMask!=0)
-		m_module_mask = moduleMask;
 	
 	m_acq_thread = new AcqThread(*this);
 	m_acq_thread->start();
 
+	//Use for control and data acquisition
 	m_xpad = new XpadClient();
+
+	//Use to get detector status
 	m_xpad_alt = new XpadClient();
 
 	if (m_xpad->connectToServer(m_host_name, m_port) < 0)
@@ -118,7 +119,7 @@ Camera::Camera(string hostname, int port, unsigned int moduleMask) : m_host_name
 	setLatTime(5000);
 	setOverflowTime(4000);
 	setImageFileFormat(1); //binary
-	setGeometricalCorrectionFlag(1);
+	setGeometricalCorrectionFlag(0);
 	setFlatFieldCorrectionFlag(0);
 	setImageTransferFlag(1);
 	setTrigMode(IntTrig);
@@ -162,10 +163,6 @@ int Camera::init()
 
 	DEB_TRACE() << "********** Outside of Camera::init ***********";
 	
-	//use module mask to enable/disable some modules. 
-	//Do not apply if 0, in order to keep compatibility with others versions
-	if(m_module_mask!=0)
-		setModuleMask(m_module_mask);
 	return ret;
 }
 

@@ -380,7 +380,10 @@ private:
         B4 = 1
     } ;
 
+    //Use for control and data acquisition
     XpadClient              *m_xpad;
+
+    //Use to get detector status
     XpadClient              *m_xpad_alt;
 
     //---------------------------------
